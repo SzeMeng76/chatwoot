@@ -1,7 +1,8 @@
 class Internal::ReconcilePlanConfigService
   def perform
     remove_premium_config_reset_warning
-    return if ChatwootHub.pricing_plan != 'community'
+    # 跳过付费功能验证 - 自托管版本启用所有功能
+    return
 
     create_premium_config_reset_warning if premium_config_reset_required?
 
