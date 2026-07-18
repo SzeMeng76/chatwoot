@@ -52,7 +52,7 @@ POSTGRES_PASSWORD=你的强密码
 POSTGRES_DATABASE=chatwoot
 
 # Redis 配置
-REDIS_URL=redis://redis:6379
+REDIS_URL=redis://localhost:6380
 REDIS_PASSWORD=你的Redis密码
 
 # 邮件发送者
@@ -113,27 +113,27 @@ docker compose -f docker-compose.deploy.yaml exec rails bundle exec rails db:cha
 
 ### 6. 访问应用
 
-打开浏览器访问 `http://your-server-ip:3000`（或你配置的域名）。
+打开浏览器访问 `http://your-server-ip:3100`（或你配置的域名）。
 
 首次访问会引导你创建管理员账户。
 
 ## 服务说明
 
-- **rails**: Chatwoot 主应用（Web 服务器，监听端口 3000）
+- **rails**: Chatwoot 主应用（Web 服务器，监听端口 3100）
 - **sidekiq**: 后台任务处理器（邮件发送、通知等）
 - **postgres**: PostgreSQL 数据库（监听端口 5432，带 pgvector 扩展，用于 AI 功能）
-- **redis**: Redis 缓存和消息队列（监听端口 6379）
+- **redis**: Redis 缓存和消息队列（监听端口 6380）
 
 **网络模式**: 使用 `host` 网络模式，所有服务直接绑定到宿主机端口。
 
 **防火墙配置**:
 ```bash
 # 必需：允许 Web 访问
-sudo ufw allow 3000/tcp
+sudo ufw allow 3100/tcp
 
 # 可选：仅在需要外部访问数据库时开放（不推荐）
 # sudo ufw allow 5432/tcp
-# sudo ufw allow 6379/tcp
+# sudo ufw allow 6380/tcp
 ```
 
 ## 常用命令
@@ -207,7 +207,7 @@ server {
     client_max_body_size 50M;
 
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:3100;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
