@@ -128,10 +128,23 @@ class ConversationReplyMailer < ApplicationMailer
 
   def reply_email
     if should_use_conversation_email_address?
-      sender_name(parse_email(@account.support_email))
+      if fixed_reply_to_email.present?
+        sender_name(parse_email(fixed_reply_to_email))
+      else
+        sender_name("reply+#{@conversation.uuid}@#{@account.inbound_email_domain}")
+      end
     else
       @inbox.email_address || @agent&.email
     end
+  end
+
+  # When CONVERSATION_CONTINUITY_REPLY_TO_EMAIL is set, conversation continuity emails use
+  # that fixed address as reply-to instead of the reply+uuid@domain address. The latter only
+  # works if inbound email ingress (relay/mailgun/etc) is set up to route replies back to
+  # Chatwoot; a fixed address lets replies land in an inbox that's actually monitored, without
+  # disabling ingress-based continuity for accounts that have it configured.
+  def fixed_reply_to_email
+    ENV['CONVERSATION_CONTINUITY_REPLY_TO_EMAIL']
   end
 
   def from_email_with_name
