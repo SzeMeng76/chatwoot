@@ -36,6 +36,7 @@ module Llm::Config
         config.openai_api_key = system_api_key if system_api_key.present?
         config.openai_api_base = "#{openai_endpoint.chomp('/')}/v1" if openai_endpoint.present?
         config.model_registry_file = Rails.root.join('config/llm_models.json').to_s
+        config.openai_protocol = :chat_completions
         config.logger = Rails.logger
       end
     end
