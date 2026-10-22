@@ -75,8 +75,8 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: true
           outputs: type=image,name=${{ steps.meta.outputs.image }},push-by-digest=true,name-canonical=true
-          cache-from: type=registry,ref=${{ steps.meta.outputs.image }}:buildcache-${{ steps.meta.outputs.platform_slug }}
-          cache-to: type=registry,ref=${{ steps.meta.outputs.image }}:buildcache-${{ steps.meta.outputs.platform_slug }},mode=max
+          # cache-from: type=registry,ref=${{ steps.meta.outputs.image }}:buildcache-${{ steps.meta.outputs.platform_slug }}
+          # cache-to: type=registry,ref=${{ steps.meta.outputs.image }}:buildcache-${{ steps.meta.outputs.platform_slug }},mode=max
           build-args: |
             RAILS_ENV=production
             BUNDLE_WITHOUT=development:test
