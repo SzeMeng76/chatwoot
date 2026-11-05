@@ -27,10 +27,13 @@ module Enterprise::Internal::CheckNewVersionsJob
   def update_subscription_status
     # Missing on older Hub versions; omission is not evidence of recovery.
     return unless @instance_info.key?('subscription_status')
+    # Self-hosted installs manage their own subscription status locally.
+    # Only sync this field for actual Chatwoot Cloud installs.
+    return unless ChatwootApp.chatwoot_cloud?
 
     previous_status = ChatwootHub.subscription_status
     update_installation_config(key: 'INSTALLATION_SUBSCRIPTION_STATUS', value: @instance_info['subscription_status'])
-    return if ChatwootApp.chatwoot_cloud? || previous_status == @instance_info['subscription_status']
+    return if previous_status == @instance_info['subscription_status']
 
     # Publish directly instead of one job per account; dashboards drop events without their own account_id.
     Account.ids.each do |account_id|
